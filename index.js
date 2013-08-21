@@ -47,7 +47,6 @@ Rest.prototype.request = function(opts, body, callback) {
     });
   });
 
-  req.setEncoding(this.encoding);
   req.on('error', finish);
 
   req.write(body);

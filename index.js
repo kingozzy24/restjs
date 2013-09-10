@@ -44,7 +44,7 @@ Rest.prototype.request = function(opts, body, callback) {
       isDone = true;
       callbackArgs[1] = res;
 
-      if (!err && middleware.length) {
+      if (!callbackArgs[0] && middleware.length) { //If there isn't already an error and there is middleware, run them
         async.eachSeries(
           middleware,
           function(middlewareItem, fn) {

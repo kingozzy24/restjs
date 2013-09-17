@@ -7,6 +7,8 @@ var async = require('async');
  */
  
 function Rest(options) {
+  options = options || {};
+
   this.encoding = options.encoding || 'utf8';
   this.protocol = options.protocol || 'http';
   this.middleware = [];

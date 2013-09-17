@@ -5,12 +5,10 @@ var findType = /(\w+\/?\w+)/;
 var supportedParsers = {
   'application/json': JSON.parse,
   'text/json': JSON.parse,
-  'text/x-json': JSON.parse,
-  'application/xml': parseXML,
-  'text/xml': parseXML
+  'text/x-json': JSON.parse
+  //'application/xml': parseXML,
+  //'text/xml': parseXML
 };
-
-function parseXML(str) { return str; }
 
 module.exports = function parser(res, next) {
   var matchedContentType = (res.headers['content-type'] || '').match(findType),

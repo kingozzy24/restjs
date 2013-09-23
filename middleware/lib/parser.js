@@ -16,7 +16,7 @@ function parseJSON(str, callback) {
 var supportedParsers = {
   'application/json': parseJSON,
   'text/json': parseJSON,
-  'text/x-json': parseJSON
+  'text/x-json': parseJSON,
   'application/xml': require('xml2js').parseString,
   'text/xml': require('xml2js').parseString
 };

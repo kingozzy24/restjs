@@ -6,8 +6,8 @@ var supportedParsers = {
   'application/json': JSON.parse,
   'text/json': JSON.parse,
   'text/x-json': JSON.parse
-  //'application/xml': parseXML,
-  //'text/xml': parseXML
+  'application/xml': require('xml2js'),
+  'text/xml': require('xml2js')
 };
 
 module.exports = function parser(res, next) {

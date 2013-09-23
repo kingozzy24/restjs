@@ -2,12 +2,23 @@
 
 var findType = /(\w+\/?\w+)/;
 
+//Make JSON.parse async
+function parseJSON(str, callback) {
+  try {
+    var parsed = parserLib(str);
+  } catch (e) {
+    return callback(e);
+  }
+
+  callback(null, parsed);
+}
+
 var supportedParsers = {
-  'application/json': JSON.parse,
-  'text/json': JSON.parse,
-  'text/x-json': JSON.parse
-  'application/xml': require('xml2js'),
-  'text/xml': require('xml2js')
+  'application/json': parseJSON,
+  'text/json': parseJSON,
+  'text/x-json': parseJSON
+  'application/xml': require('xml2js').parseString,
+  'text/xml': require('xml2js').parseString
 };
 
 module.exports = function parser(res, next) {
@@ -16,12 +27,8 @@ module.exports = function parser(res, next) {
 
   if (!(matchedContentType && (parserLib = supportedParsers[matchedContentType[0]]))) return next();
 
-  try {
-    parsedBody = parserLib(res.body);
-  } catch (e) {
-    return next(e);
-  }
-
-  res.parsedBody = parsedBody;
-  next();
+  parserLib(res.body, function(err, parsed) {
+    res.parsedBody = parsed;
+    next();
+  });
 };

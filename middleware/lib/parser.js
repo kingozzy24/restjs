@@ -19,8 +19,7 @@ var supportedParsers = {
   'text/json': parseJSON,
   'text/x-json': parseJSON,
   'application/xml': xml2js.parseString,
-  'text/xml': xml2js.parseString,
-  'text/html': xml2js.parseString
+  'text/xml': xml2js.parseString
 };
 
 module.exports = function parser(res, next) {
@@ -31,6 +30,6 @@ module.exports = function parser(res, next) {
 
   parserLib(res.body, function(err, parsed) {
     res.parsedBody = parsed;
-    next();
+    next(err); //If there's an error, it will be passed to the callback
   });
 };

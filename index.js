@@ -63,16 +63,8 @@ Rest.prototype.request = function(opts, body, callback) {
       }
     }
   }
-
-  //If it's an options object, we can set headers
-  if ((typeof opts === 'object') && !Array.isArray(opts)) {
-    if (typeof body === 'object') (opts.headers || (opts.headers = {}))['Content-Type'] = 'application/json';
-
-    body = JSON.stringify(body)
-    opts.headers['Content-Length'] = body.length;
-  }
   
-  if (typeof body !== 'string') body = JSON.stringify(body)
+  if (typeof body !== 'string') body = JSON.stringify(body);
 
   //TODO: add headers like encoding
   req = this._requestModule.request(opts, function(res) {

@@ -63,8 +63,13 @@ Rest.prototype.request = function(opts, body, callback) {
     }
   }
 
+  if (typeof body === 'object') opts.headers['Content-Type'] = 'application/json';
+  if (typeof body !== 'string') body = JSON.stringify(body);
+
+  opts.headers['Content-Length'] = body.length;
+
   //TODO: add headers like encoding
-  var req = this._requestModule.request(opts, function(res) {
+  this._requestModule.request(opts, function(res) {
     var data = '';
 
     res.setEncoding(self.encoding);
@@ -74,17 +79,10 @@ Rest.prototype.request = function(opts, body, callback) {
       res.body = res.message = data;
       finish(null, res);
     });
-  });
-
-  req.on('error', finish);
-
-  if (typeof body === 'object') opts.headers['Content-Type'] = 'application/json';
-  if (typeof body !== 'string') body = JSON.stringify(body);
-
-  opts.headers['Content-Length'] = body.length;
-
-  req.write(body);
-  req.end();
+  })
+  .on('error', finish)
+  .write(body);
+  .end();
 }
 
 module.exports = Rest;

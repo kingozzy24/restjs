@@ -30,7 +30,8 @@ Rest.prototype.request = function(opts, body, callback) {
   var self = this,
       middleware = this.middleware,
       callbackArgs = [],
-      isDone = false;
+      isDone = false,
+      req;
 
   if (typeof body === 'function') {
     callback = body;
@@ -70,9 +71,11 @@ Rest.prototype.request = function(opts, body, callback) {
     body = JSON.stringify(body)
     opts.headers['Content-Length'] = body.length;
   }
+  
+  if (typeof body !== 'string') body = JSON.stringify(body)
 
   //TODO: add headers like encoding
-  this._requestModule.request(opts, function(res) {
+  req = this._requestModule.request(opts, function(res) {
     var data = '';
 
     res.setEncoding(self.encoding);
@@ -82,10 +85,12 @@ Rest.prototype.request = function(opts, body, callback) {
       res.body = res.message = data;
       finish(null, res);
     });
-  })
-  .on('error', finish)
-  .write((typeof body === 'string') ? body : JSON.stringify(body))
-  .end();
+  });
+
+  req.on('error', finish);
+
+  req.write(body);
+  req.end();
 }
 
 module.exports = Rest;

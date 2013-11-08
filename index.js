@@ -81,7 +81,7 @@ Rest.prototype.request = function(opts, body, callback) {
     });
   })
   .on('error', finish)
-  .write(body);
+  .write(body)
   .end();
 }
 

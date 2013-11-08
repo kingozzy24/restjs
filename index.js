@@ -63,10 +63,13 @@ Rest.prototype.request = function(opts, body, callback) {
     }
   }
 
-  if (typeof body === 'object') opts.headers['Content-Type'] = 'application/json';
-  if (typeof body !== 'string') body = JSON.stringify(body);
+  //If it's an options object, we can set headers
+  if ((typeof opts === 'object') && !Array.isArray(opts)) {
+    if (typeof body === 'object') (opts.headers || (opts.headers = {}))['Content-Type'] = 'application/json';
 
-  opts.headers['Content-Length'] = body.length;
+    body = JSON.stringify(body)
+    opts.headers['Content-Length'] = body.length;
+  }
 
   //TODO: add headers like encoding
   this._requestModule.request(opts, function(res) {
@@ -81,7 +84,7 @@ Rest.prototype.request = function(opts, body, callback) {
     });
   })
   .on('error', finish)
-  .write(body)
+  .write((typeof body === 'string') ? body : JSON.stringify(body))
   .end();
 }
 

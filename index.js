@@ -78,6 +78,11 @@ Rest.prototype.request = function(opts, body, callback) {
 
   req.on('error', finish);
 
+  if (typeof body === 'object') opts.headers['Content-Type'] = 'application/json';
+  if (typeof body !== 'string') body = JSON.stringify(body);
+
+  opts.headers['Content-Length'] = body.length;
+
   req.write(body);
   req.end();
 }
